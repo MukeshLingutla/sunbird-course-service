@@ -1152,6 +1152,6 @@ public final class JsonKey {
   public static final String EVENTID = "eventid";
   public static final String EVENT_REDIS_TTL = "eventRedisTTL";
   public static final String LEARNER_EVENT_DB = "learnerEvent_db";
-  public static final String LEARNER_ENROLMENT_DB = "learnerEnrolment_db";  public static final String EVENT_BATCH_DB = "eventBatchDB";
+  public static final String LEARNER_ENROLMENT_DB = "learnerEnrolment_db";
   private JsonKey() {}
 }
