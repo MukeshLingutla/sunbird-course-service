@@ -202,7 +202,7 @@ public final class JsonKey {
   public static final String SEARCH_SERVICE_API_BASE_URL = "sunbird_search_service_api_base_url";
   public static final String ANALYTICS_API_BASE_URL = "sunbird_analytics_api_base_url";
   public static final String EKSTEP_AUTHORIZATION = "ekstep_authorization";
-  public static final String EKSTEP_BASE_URL = "ekstep_api_base_url";
+  public static final String EKSTEP_BASE_URL = "http://localhost:6008";
   public static final String EKSTEP_CHANNEL_REG_API_URL = "ekstep.channel.reg.api.url";
   public static final String EKSTEP_CHANNEL_UPDATE_API_URL = "ekstep.channel.update.api.url";
   public static final String EKSTEP_CONCEPT_URL = "ekstep_concept_base_url";
@@ -1031,7 +1031,7 @@ public final class JsonKey {
   public static final String CREATOR_DETAILS_FIELDS = "sunbird_user_search_cretordetails_fields";
   public static final String USER_SEARCH_BASE_URL = "sunbird_user_service_api_base_url";
   public static final String SUNBIRD_QRCODE_COURSES_LIMIT ="sunbird_user_qrcode_courses_limit";
-  public static final String ACCESS_TOKEN_PUBLICKEY_BASEPATH = "accesstoken.publickey.basepath";
+  public static final String ACCESS_TOKEN_PUBLICKEY_BASEPATH = "accesstoken_publickey_basepath";
   public static final String ACCESS_TOKEN_PUBLICKEY_KEYPREFIX = "accesstoken.publickey.keyprefix";
   public static final String ACCESS_TOKEN_PUBLICKEY_KEYCOUNT = "accesstoken.publickey.keycount";
   public static final String SHA_256_WITH_RSA = "SHA256withRSA";
@@ -1143,5 +1143,11 @@ public final class JsonKey {
   public static final String END_DATE_BATCH = "end_date";
   public static final String ADD_EXTRA_HOURS_MINS = "addExtraHrsAndMins.start_date_end_date";
   public static final String STANDALONE_ASSESSMENT ="Standalone Assessment";
+  public static final String KEYSPACE_SUNBIRD_COURSES = "sunbird_courses";
+  public static final String TABLE_USER_EVENT_ENROLMENTS = "user_event_enrolments_test";
+  public static final String TABLE_USER_EVENT_BATCHES = "event_batch";
+  public static final String TABLE_USER_EVENT_CONSUMPTION = "user_event_consumption";
+  public static final String EVENTID = "eventid";
+
   private JsonKey() {}
 }
