@@ -2,10 +2,14 @@ package org.sunbird.learner.actors.event.impl;
 
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.sunbird.cache.util.RedisCacheUtil;
 import org.sunbird.cassandra.CassandraOperation;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.LoggerUtil;
+import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.request.Request;
 import org.sunbird.common.request.RequestContext;
 import org.sunbird.helper.ServiceFactory;
@@ -17,6 +21,7 @@ import java.util.*;
 public class EventEnrolmentDaoImpl implements EventEnrolmentDao {
 
     private CassandraOperation cassandraOperation = ServiceFactory.getInstance();
+    private RedisCacheUtil redisCacheUtil = new RedisCacheUtil();
     public LoggerUtil logger = new LoggerUtil(this.getClass());
 
     @Override
@@ -86,14 +91,32 @@ public class EventEnrolmentDaoImpl implements EventEnrolmentDao {
     private Map<String, Object> getContentDetails(RequestContext requestContext, String eventId) {
         Map<String, Object> response = new HashMap<>();
         try {
+            logger.info(requestContext, "EventEnrolmentDaoImpl:getContentDetails: eventIdId: " + eventId, null,
+                    null);
+            String key = getCacheKey(eventId);
+            int ttl = Integer.parseInt(PropertiesCache.getInstance().getProperty(JsonKey.EVENT_REDIS_TTL));
+            String cacheResponse = redisCacheUtil.get(key,null,ttl);
+            ObjectMapper mapper = new ObjectMapper();
+            if (cacheResponse != null && !cacheResponse.isEmpty()) {
+                logger.info(requestContext, "EventEnrolmentDaoImpl:getContentDetails: Data reading from cache ", null,
+                        null);
+                return mapper.readValue(cacheResponse, new TypeReference<Map<String, Object>>() {});
+            }else{
             Map<String, Object> ekStepContent = ContentUtil.getContent(eventId);
-            logger.info(requestContext, "EventEnrolmentDaoImpl:getContentDetails: courseId: " + eventId, null,
+            logger.debug(requestContext, "EventEnrolmentDaoImpl:getContentDetails: courseId: " + eventId, null,
                     ekStepContent);
             response = (Map<String, Object>) ekStepContent.getOrDefault("content", new HashMap<>());
+                redisCacheUtil.set(key, mapper.writeValueAsString(response), ttl);
             return response;
+            }
         } catch (Exception e) {
             logger.error(requestContext, "Error found during event read api " + e.getMessage(), e);
         }
         return response;
     }
+
+    private String getCacheKey(String eventId) {
+        return eventId + ":user-event-enrolments";
+    }
+
 }
