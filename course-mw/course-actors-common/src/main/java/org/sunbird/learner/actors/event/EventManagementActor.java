@@ -33,6 +33,9 @@ public class EventManagementActor extends BaseActor {
             case "listEnrol":
                 userEventEnrollmentList(request);
                 break;
+            case "getEnrol":
+                getUserEventEnrollment(request);
+                break;
             default:
                 onReceiveUnsupportedOperation(requestedOperation);
                 break;
@@ -109,9 +112,24 @@ public class EventManagementActor extends BaseActor {
 
         List<String> courseIdList = (List<String>) request.get(JsonKey.COURSE_IDS);
         logger.info(request.getRequestContext(), "CourseEnrolmentActor: list : UserId = " + userId);
-
         try {
             List<Map<String, Object>> result = eventBatchDao.getEnrolmentList(request, userId, courseIdList);
+            Response response = new Response();
+            response.put(JsonKey.EVENTS, result);
+            sender().tell(response, self());
+        } catch (Exception e) {
+            logger.error(request.getRequestContext(), "Exception in enrolment list for user: " + userId, e);
+            throw e;
+        }
+    }
+
+    private void getUserEventEnrollment(Request request) throws Exception {
+        String userId = (String) request.get(JsonKey.USER_ID);
+        String eventId = (String) request.get(JsonKey.EVENT_ID);
+        String batchId = (String) request.get(JsonKey.BATCH_ID);
+        logger.info(request.getRequestContext(), "CourseEnrolmentActor: list : UserId = " + userId);
+        try {
+            List<Map<String, Object>> result = eventBatchDao.getUserEventEnrollment(request, userId, eventId,batchId);
             Response response = new Response();
             response.put(JsonKey.EVENTS, result);
             sender().tell(response, self());

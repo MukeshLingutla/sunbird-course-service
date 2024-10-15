@@ -88,6 +88,35 @@ public class EventEnrolmentDaoImpl implements EventEnrolmentDao {
         return userBatchList;
     }
 
+    @Override
+    public List<Map<String, Object>> getUserEventEnrollment(Request request, String userId,String eventId ,String batchId){
+        List<Map<String, Object>> userEnrollmentList = new ArrayList<>();
+        Map<String, Object> propertyMap = new HashMap<>();
+        propertyMap.put(JsonKey.USER_ID_KEY, userId);
+        propertyMap.put(JsonKey.EVENTID, eventId);
+        propertyMap.put(JsonKey.BATCH_ID_KEY, batchId);
+        Response res = cassandraOperation.getRecordsByCompositeKey(JsonKey.KEYSPACE_SUNBIRD_COURSES,
+                JsonKey.TABLE_USER_EVENT_ENROLMENTS,
+                propertyMap,
+                request.getRequestContext()
+        );
+        if (!((List<Map<String, Object>>) res.get(JsonKey.RESPONSE)).isEmpty()) {
+            userEnrollmentList = ((List<Map<String, Object>>) res.get(JsonKey.RESPONSE));
+            for (Map<String, Object> enrollment : userEnrollmentList) {
+                 eventId = (String) enrollment.get(JsonKey.EVENTID);
+                 String userid = (String) enrollment.get(JsonKey.USER_ID);
+                 batchId = (String) enrollment.get(JsonKey.BATCH_ID);
+                Map<String, Object> contentDetails = getContentDetails(request.getRequestContext(), (String) enrollment.get("eventid"));
+                List<Map<String, Object>> batchDetails = getBatchList(request, eventId, batchId);
+                List<Map<String, Object>> userEventConsumption = getUserEventConsumption(request, userid, batchId, eventId);
+                enrollment.put("event", contentDetails);
+                enrollment.put("batchDetails", batchDetails);
+                enrollment.put("userEventConsumption", userEventConsumption);
+            }
+        }
+        return userEnrollmentList;
+    }
+
     private Map<String, Object> getContentDetails(RequestContext requestContext, String eventId) {
         Map<String, Object> response = new HashMap<>();
         try {
