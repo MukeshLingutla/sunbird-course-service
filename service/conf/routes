@@ -103,4 +103,4 @@ PATCH   /v1/user/event/state/update     	@controllers.eventmanagement.EventConsu
 GET      /v1/user/events/list/:uid	    @controllers.eventmanagement.EventController.getEnrolledCourses(uid:String, request: play.mvc.Http.Request)
 POST    /v2/event/batch/create			    @controllers.eventmanagement.EventsController.createEventBatch(request: play.mvc.Http.Request)
 PATCH    /v1/event/state/update     	@controllers.LearnerController.updateEventState(request: play.mvc.Http.Request)
-
+GET      /v1/user/event/:uid	    @controllers.eventmanagement.EventController.getEnrolledEvent(uid:String, request: play.mvc.Http.Request)
