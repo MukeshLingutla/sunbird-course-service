@@ -730,7 +730,6 @@ public final class ContentUtil {
                             + ProjectUtil.getConfigValue(JsonKey.EKSTEP_ADMIN_CONTENT_READ_URL)
                             + collectionId;
             logger.info(null, "ContentUtil::getAdminContentV4:: baseContentReadUrl: " + baseContentReadUrl);
-            logger.info(null, "ContentUtil::getContentV3:: baseContentReadUrl: " + baseContentReadUrl);
             if (CollectionUtils.isNotEmpty(fields)) {
                 StringJoiner apiFields = new StringJoiner(",");
                 for (String item : fields) {
